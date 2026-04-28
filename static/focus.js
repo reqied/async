@@ -31,8 +31,9 @@ function sendRequest(url, callback) {
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
-                    callback(JSON.parse(xhr.response));
-                }
+                    resolve(JSON.parse(xhr.response));
+                } else
+                    reject(new Error(xhr.responseText));
             }
         };
 
