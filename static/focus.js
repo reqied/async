@@ -19,23 +19,15 @@ async function run() {
 
 run();
 
-function sendRequest(url, callback) {
+async function sendRequest(url) {
+    const response = await fetch(url);
     return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", url, true);
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    console.log("Received response: " + xhr.responseText);
-                    resolve(JSON.parse(xhr.response));
-                } else
-                    reject(new Error(xhr.responseText));
-            }
-        };
-
-        xhr.send();
-    })
+        if (response.ok) {
+            resolve(response.json());
+        } else {
+            reject(response.statusText);
+        }
+    });
 }
 
 function reqsToMap(requisites) {
@@ -86,7 +78,7 @@ function renderOrganization(orgInfo, template, container) {
                 orgInfo.buhForms[orgInfo.buhForms.length - 1].form2[0] &&
                 orgInfo.buhForms[orgInfo.buhForms.length - 1].form2[0]
                     .endValue) ||
-                0
+            0
         );
     } else {
         money.textContent = "—";
