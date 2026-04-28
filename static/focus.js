@@ -21,13 +21,11 @@ run();
 
 async function sendRequest(url) {
     const response = await fetch(url);
-    return new Promise((resolve, reject) => {
-        if (response.ok) {
-            resolve(response.json());
-        } else {
-            reject(response.statusText);
-        }
-    });
+    if (response.ok) {
+        return response.json();
+    } else {
+        throw new Error(`${response.status}: ${response.statusText}`);
+    }
 }
 
 function reqsToMap(requisites) {
