@@ -1,18 +1,22 @@
 const API = {
     organizationList: "/orgsList",
-    analytics: "/api3/analytics",
+    analytics: "/api3/analytis",
     orgReqs: "/api3/reqBase",
     buhForms: "/api3/buh",
 };
 
 async function run() {
     const orgOgrns = await sendRequest(API.organizationList);
+    if (!orgOgrns) return;
     const ogrns = orgOgrns.join(",");
     const requisites = await sendRequest(`${API.orgReqs}?ogrn=${ogrns}`);
+    if (!requisites) return;
     const orgsMap = reqsToMap(requisites);
     const analytics = await sendRequest(`${API.analytics}?ogrn=${ogrns}`);
+    if (!analytics) return;
     addInOrgsMap(orgsMap, analytics, "analytics");
     const buh = await sendRequest(`${API.buhForms}?ogrn=${ogrns}`);
+    if (!buh) return;
     addInOrgsMap(orgsMap, buh, "buhForms");
     render(orgsMap, orgOgrns);
 }
@@ -24,7 +28,8 @@ async function sendRequest(url) {
     if (response.ok) {
         return response.json();
     } else {
-        throw new Error(`${response.status}: ${response.statusText}`);
+        alert(`${response.status}: ${response.statusText}`);
+        return null;
     }
 }
 
